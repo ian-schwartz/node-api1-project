@@ -11,11 +11,22 @@ server.get('/api/users', (req, res) => {
       .then(users => {
         res.status(200).json(users);
       })
-      .catch(err => {
-        console.log('error', err);
-        res.status(500).json({ error: 'failed to get users from db' });
-      });
+      .catch(() => res.status(500).json({ error: "The users information could not be retrieved." }));
   });
+
+// GET to /api/users/:id
+server.get('/api/users/:id', (req, res) => {
+    db.findById(req.params.id)
+      .then(user => {
+          if (!user) {
+              res.status(404).json({ message: "The user with the specified ID does not exist." });
+          } else {
+              res.status(200).json(user);
+          }
+      })
+      .catch(() => res.status(500).json({ error: "The users information could not be retrieved." }));
+});
+
 
 // POST to /api/users
 
